@@ -275,7 +275,12 @@ class DatabaseTools
     private static function throwInvalidTypeException($variable, $expectedType, $value = null)
     {
         throw new DatabaseException(
-            sprintf('Expected variable %s to be of type %s, got %s.', $variable, $expectedType, gettype($value)),
+            sprintf(
+                'Expected variable %s to be of type %s, got %s.',
+                $variable,
+                $expectedType,
+                gettype($value)
+            ),
             DatabaseException::TYPE_MISMATCH
         );
     }

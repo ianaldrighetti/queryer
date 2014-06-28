@@ -77,7 +77,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      * @return Database
      * @see \QueryerTests\Mock\MockDatabaseDriver
      */
-    private function getMockDatabase($engineName, array $engineOptions)
+    public function getMockDatabase($engineName, array $engineOptions)
     {
         Database::setEngineName($engineName);
         Database::setEngineOptions($engineOptions);

@@ -102,7 +102,7 @@ class MockDatabaseDriver extends DatabaseDriver
     {
         $this->sanitize = $str;
 
-        return '';
+        return addcslashes($str, "'");
     }
 
     /**
