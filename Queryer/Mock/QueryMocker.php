@@ -4,11 +4,11 @@ namespace Queryer\Mock;
 /**
  * Class QueryMocker
  *
- * A default implementation of the QueryMockInterface. This is used to mock out database results for testing purposes.
+ * A default implementation of the QueryMockerInterface. This is used to mock out database results for testing purposes.
  *
  * @package Queryer\Mock
  */
-class QueryMocker implements QueryMockInterface
+class QueryMocker implements QueryMockerInterface
 {
     /**
      * The result to encapsulate in a MockDriverResult.

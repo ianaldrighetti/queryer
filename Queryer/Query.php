@@ -2,7 +2,7 @@
 namespace Queryer;
 
 use InvalidArgumentException;
-use Queryer\Mock\QueryMockInterface;
+use Queryer\Mock\QueryMockerInterface;
 
 /**
  * Class Query
@@ -22,7 +22,7 @@ class Query
 
     /**
      * An instance of a Query Mocker for testing.
-     * @var QueryMockInterface
+     * @var QueryMockerInterface
      * @see \Queryer\Mock\QueryMocker
      */
     private static $mocker = null;
@@ -320,12 +320,22 @@ class Query
     /**
      * Sets a mocker that will be able to watch what's going on, without letting anything actually hit the database.
      *
-     * @param QueryMockInterface $mock
+     * @param QueryMockerInterface $mock
      * @see \Queryer\Mock\QueryMocker
      */
-    public static function setMocker(QueryMockInterface $mock)
+    public static function setMocker(QueryMockerInterface $mock)
     {
         self::$mocker = $mock;
+    }
+
+    /**
+     * Returns the currently set Query Mocker.
+     *
+     * @return QueryMockerInterface
+     */
+    public static function getMocker()
+    {
+        return self::$mocker;
     }
 
     /**
