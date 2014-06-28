@@ -30,7 +30,7 @@ abstract class DatabaseDriver
      * @return object It is expected to return an instance of an \Queryer\Driver\DatabaseDriverResult class.
      * @see \Queryer\Query, \Queryer\Driver\DatabaseDriverResult
      */
-    abstract public function execute($options);
+    abstract public function execute(array $options);
 
     /**
      * This method is to sanitize the string appropriately for safe insertion into a query.
