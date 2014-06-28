@@ -39,6 +39,13 @@ class Database
     private static $instance = null;
 
     /**
+     * The fully qualified name of a driver class for getDriverClassName to return (for testing purposes).
+     * @var string
+     * @see getDriverClassName
+     */
+    private static $driverClassName = null;
+
+    /**
      * Initializes the Database instance by making a connection to the database.
      *
      * @param string $engineName The name of the database driver.
@@ -48,7 +55,7 @@ class Database
      */
     public function __construct($engineName, array $engineOptions)
     {
-        $driverClassName = $this->getDriverClassName($engineName);
+        $driverClassName = self::getDriverClassName($engineName);
 
         // Check if the class exists (an autoload will be attempted).
         if (!class_exists($driverClassName))
@@ -70,18 +77,13 @@ class Database
     }
 
     /**
-     * Returns the fully qualified class name of where the database engine driver should reside.
+     * Allows direct access to the Database Driver instance.
      *
-     * @param string $engineName
-     * @return string
+     * @return Driver\DatabaseDriver
      */
-    public function getDriverClassName($engineName)
+    public function getDriver()
     {
-        // Make sure the first, and only the first, character is uppercased.
-        $engineName = ucfirst(strtolower($engineName));
-
-        // Return the full class name of the driver.
-        return '\\Queryer\\Engine\\'. $engineName. '\\'. $engineName. 'Driver';
+        return $this->driver;
     }
 
     /**
@@ -136,6 +138,14 @@ class Database
     }
 
     /**
+     * Clears the current instance of the Database object.
+     */
+    public static function clearInstance()
+    {
+        self::$instance = null;
+    }
+
+    /**
      * Returns the name of the current engine being used.
      *
      * @return string
@@ -177,5 +187,37 @@ class Database
     public static function setEngineOptions(array $engineOptions)
     {
         self::$engineOptions = $engineOptions;
+    }
+
+    /**
+     * Returns the fully qualified class name of where the database engine driver should reside.
+     *
+     * @param string $engineName
+     * @return string
+     */
+    public static function getDriverClassName($engineName)
+    {
+        if (!is_null(self::$driverClassName))
+        {
+            return self::$driverClassName;
+        }
+
+        // Make sure the first, and only the first, character is uppercased.
+        $engineName = ucfirst(strtolower($engineName));
+
+        // Return the full class name of the driver.
+        return '\\Queryer\\Engine\\'. $engineName. '\\'. $engineName. 'Driver';
+    }
+
+    /**
+     * Sets the fully-qualified name of a driver class implementation for getDriverClassName to return, for testing
+     * purposes.
+     *
+     * @param string $driverClassName
+     * @see getDriverClassName
+     */
+    public static function setDriverClassName($driverClassName)
+    {
+        self::$driverClassName = $driverClassName;
     }
 } 
