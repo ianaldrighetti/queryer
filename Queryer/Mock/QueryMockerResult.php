@@ -4,7 +4,7 @@ namespace Queryer\Mock;
 use Queryer\Driver\DatabaseDriverResult;
 
 /**
- * Class MockDriverResult
+ * Class QueryMockerResult
  *
  * This implements the actual DatabaseDriverResult abstract class and allows Query Mocker's to return an object that
  * appears like a result set to the application without it knowing it, well, really isn't. The mock result can be
@@ -12,7 +12,7 @@ use Queryer\Driver\DatabaseDriverResult;
  *
  * @package Queryer\Mock
  */
-class MockDriverResult extends DatabaseDriverResult
+class QueryMockerResult extends DatabaseDriverResult
 {
     /**
      * The number of rows affected by the query.

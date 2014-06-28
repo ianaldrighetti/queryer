@@ -17,10 +17,10 @@ interface QueryMockerInterface
     /**
      * When the execute method of a Query builder is invoked, this method is called (instead of the database) with the
      * array of options the Query builder has collected up to that point. This method is expected to return an instance
-     * of a MockDriverResult.
+     * of a QueryMockerResult.
      *
      * @param array $options
-     * @return \Queryer\Mock\MockDriverResult
+     * @return \Queryer\Mock\QueryMockerResult
      * @see \Queryer\Mock\MockDriverResult, \Queryer\Mock\QueryMocker
      */
     public function execute($options);

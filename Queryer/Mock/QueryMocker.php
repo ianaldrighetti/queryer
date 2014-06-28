@@ -1,5 +1,6 @@
 <?php
 namespace Queryer\Mock;
+use Queryer\Exception\QueryMockerResultException;
 
 /**
  * Class QueryMocker
@@ -11,7 +12,7 @@ namespace Queryer\Mock;
 class QueryMocker implements QueryMockerInterface
 {
     /**
-     * The result to encapsulate in a MockDriverResult.
+     * The result to encapsulate in a QueryMockerResult.
      *
      * @var array|bool
      */
@@ -64,7 +65,7 @@ class QueryMocker implements QueryMockerInterface
     }
 
     /**
-     * Sets the result to be encapsulated into a MockDriverResult.
+     * Sets the result to be encapsulated into a QueryMockerResult.
      *
      * @param array|bool $result
      * @param int $affectedRows
@@ -174,7 +175,9 @@ class QueryMocker implements QueryMockerInterface
      *
      * @param array $options
      * @throws \Exception
-     * @return MockDriverResult
+     * @return QueryMockerResult
+     * @throws \Queryer\Exception\QueryMockerResultException Thrown when there are not enough results to satisfy the
+     *                                                       the execution request.
      */
     public function execute($options)
     {
@@ -193,7 +196,10 @@ class QueryMocker implements QueryMockerInterface
             // Make sure we can serve this result.
             if ($this->resultIndex >= count($this->results))
             {
-                throw new \Exception('Not expecting any more executions. Not enough results specified.');
+                throw new QueryMockerResultException(
+                    'Not expecting any more query executions. There are not enough results specified.',
+                    QueryMockerResultException::NOT_ENOUGH_RESULTS
+                );
             }
 
             $result = $this->results[$this->resultIndex++];
@@ -208,7 +214,7 @@ class QueryMocker implements QueryMockerInterface
             ));
         }
 
-        return new MockDriverResult(
+        return new QueryMockerResult(
             $result['result'],
             $result['affectedRows'],
             $result['insertId'],
