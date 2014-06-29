@@ -1,11 +1,12 @@
 <?php
-namespace QueryerTests;
+namespace QueryerTests\Driver;
 
 use Queryer\Driver\DatabaseTools;
+use QueryerTests\DatabaseTest;
 
 /**
  * Class DatabaseToolsTest
- * @package QueryerTests
+ * @package QueryerTests\Driver
  */
 class DatabaseToolsTest extends \PHPUnit_Framework_TestCase
 {
