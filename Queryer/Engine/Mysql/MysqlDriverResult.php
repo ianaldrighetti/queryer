@@ -135,7 +135,7 @@ class MysqlDriverResult extends DatabaseDriverResult
      */
     public function __destruct()
     {
-        if (!is_bool($this->getResult()))
+        if (!is_bool($this->getResult()) && is_callable(array($this->getResult(), 'free')))
         {
             $this->getResult()->free();
         }

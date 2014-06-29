@@ -1,14 +1,136 @@
 <?php
-namespace RsvpTest\Database\Engine\Mysql;
+namespace QueryerTests\Engine\Mysql;
 
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
+use Queryer\Driver\DatabaseTools;
 use Queryer\Engine\Mysql\MysqlDriver;
+use Queryer\Query;
+use QueryerTests\Mocker\MockMysqli;
 
 /**
  * Class MysqlDriverTest
- * @package RsvpTest\Database\Engine\Mysql
+ * @package QueryerTests\Engine\Mysql
  */
 class MysqlDriverTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * The instance of MockMysqli.
+     * @var \QueryerTests\Mocker\MockMysqli
+     */
+    private $mysqliMocker;
+
+    /**
+     * An instance of the MysqlDriver.
+     * @var MysqlDriver
+     */
+    private $mysqlDriver;
+
+    /**
+     * Sets up the MockMysqli and MysqlDriver.
+     */
+    public function setUp()
+    {
+        $this->mysqliMocker = new MockMysqli();
+        MysqlDriver::setMysqliInstance($this->mysqliMocker);
+
+        $this->mysqlDriver = new MysqlDriver();
+        $this->mysqlDriver->connect(array());
+    }
+
+    /**
+     * Cleans up after each test.
+     */
+    public function tearDown()
+    {
+        MysqlDriver::clearMysqliInstance();
+    }
+
+    /**
+     * Tests the connect method.
+     */
+    public function testConnect()
+    {
+        $options = array(
+            'host' => 'localhost',
+            'user' => 'me',
+            'pwd' => 'dkjsal',
+            'db_name' => 'database',
+        );
+
+        // Make sure connect returns true.
+        $this->assertTrue($this->mysqlDriver->connect($options));
+
+        // And that it was passed the options.
+        $this->assertEquals($options, $this->mysqliMocker->getSetOptionsInvokedWith());
+    }
+
+    /**
+     * Tests the execute method.
+     */
+    public function testExecute()
+    {
+        $query = Query::create('SELECT')
+            ->selectExpr('user_id')
+            ->from('users')
+            ->where('user_id = {int:user_id}')
+            ->variables(array(
+                'user_id' => 100,
+            ));
+
+        // Set everything...
+        $this->mysqliMocker->affected_rows = 100;
+        $this->mysqliMocker->insert_id = 321;
+        $this->mysqliMocker->errno = 322;
+        $this->mysqliMocker->error = "ERROR";
+
+        $userId = 32143;
+        $this->mysqliMocker->setQueryReturn(true);
+
+        $result = $this->mysqlDriver->execute($query->getOptions());
+
+        $this->assertEquals(
+            DatabaseTools::replaceVariables(
+                MysqlDriver::generateQuery($query->getOptions()),
+                array(
+                    'user_id' => 100
+                )
+            ),
+            $this->mysqliMocker->getQueryInvokedWith()
+        );
+
+        $this->assertEquals($this->mysqliMocker->affected_rows, $result->getAffectedRows());
+        $this->assertEquals($this->mysqliMocker->insert_id, $result->getInsertId());
+        $this->assertEquals($this->mysqliMocker->errno, $result->getErrorCode());
+        $this->assertEquals($this->mysqliMocker->error, $result->getErrorMessage());
+    }
+
+    /**
+     * Tests the sanitize method.
+     */
+    public function testSanitize()
+    {
+        $str = 'Sanitize me!';
+        $this->mysqlDriver->sanitize($str);
+
+        $this->assertEquals($str, $this->mysqliMocker->getRealEscapeStringInvokedWith());
+    }
+
+    /**
+     * Tests the getTimestamp method.
+     */
+    public function testGetTimestamp()
+    {
+        // A warning will occur, otherwise...
+        date_default_timezone_set('UTC');
+
+        $this->assertEquals(date('Y-m-d H:i:s', time()), $this->mysqlDriver->getTimestamp());
+
+        $timestamp = 4832190;
+        $this->assertEquals(date('Y-m-d H:i:s', $timestamp), $this->mysqlDriver->getTimestamp($timestamp));
+    }
+
     /**
      * Tests to ensure the MySQL Driver generates SELECT queries properly.
      */

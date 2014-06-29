@@ -1,5 +1,5 @@
 <?php
-namespace QueryerTests\Mock;
+namespace QueryerTests\Mocker;
 
 use Queryer\Driver\DatabaseDriver;
 
@@ -8,7 +8,7 @@ use Queryer\Driver\DatabaseDriver;
  *
  * A mock implementation of a database driver for testing purposes.
  *
- * @package QueryerTests\Mock
+ * @package QueryerTests\Mocker
  */
 class MockDatabaseDriver extends DatabaseDriver
 {

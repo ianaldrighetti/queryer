@@ -81,7 +81,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     {
         Database::setEngineName($engineName);
         Database::setEngineOptions($engineOptions);
-        Database::setDriverClassName('\\QueryerTests\\Mock\\MockDatabaseDriver');
+        Database::setDriverClassName('\\QueryerTests\\Mocker\\MockDatabaseDriver');
 
         return Database::getInstance();
     }

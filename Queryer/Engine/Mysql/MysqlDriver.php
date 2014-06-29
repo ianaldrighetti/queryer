@@ -18,6 +18,12 @@ class MysqlDriver extends DatabaseDriver
     private $con;
 
     /**
+     * An instance for mocking out a mysqli instance.
+     * @var MysqliInterface
+     */
+    private static $mysqliInstance = null;
+
+    /**
      * Initializes the MySQL Driver (just sets the connection to null).
      */
     public function __construct()
@@ -34,12 +40,7 @@ class MysqlDriver extends DatabaseDriver
      */
     public function connect(array $options)
     {
-        $this->con = new mysqli(
-            $options['host'],
-            $options['user'],
-            $options['pwd'],
-            $options['db_name']
-        );
+        $this->con = $this->getMysqliInstance($options);
 
         if (mysqli_connect_error() !== null)
         {
@@ -50,6 +51,24 @@ class MysqlDriver extends DatabaseDriver
         }
 
         return true;
+    }
+
+    /**
+     * Returns an instance of mysqli or MysqliInterface.
+     *
+     * @param array $options
+     * @return mysqli|MysqliInterface
+     */
+    private function getMysqliInstance(array $options)
+    {
+        if (!is_null(self::$mysqliInstance))
+        {
+            self::$mysqliInstance->setOptions($options);
+
+            return self::$mysqliInstance;
+        }
+
+        return new mysqli($options['host'], $options['user'], $options['pwd'], $options['db_name']);
     }
 
     /**
@@ -225,5 +244,23 @@ class MysqlDriver extends DatabaseDriver
         }
 
         return date('Y-m-d H:i:s', $timestamp);
+    }
+
+    /**
+     * Sets a mocker for the mysqli instance.
+     *
+     * @param MysqliInterface $mysqliInstance
+     */
+    public static function setMysqliInstance(MysqliInterface $mysqliInstance)
+    {
+        self::$mysqliInstance = $mysqliInstance;
+    }
+
+    /**
+     * Clears the mysqli mocker instance.
+     */
+    public static function clearMysqliInstance()
+    {
+        self::$mysqliInstance = null;
     }
 }
