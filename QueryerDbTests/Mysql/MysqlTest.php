@@ -140,10 +140,49 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
         // Fetch the row.
         $actualRow = $result->fetchAssoc();
+        var_dump($actualRow);
         $this->assertTrue(is_array($actualRow));
 
         // Now make sure it is right.
         $this->assertEquals($row, $actualRow);
+    }
+
+    /**
+     * Tests updating data.
+     */
+    public function testUpdate()
+    {
+        // Insert some fake data.
+        $this->insertFakeData(3);
+    }
+
+    /**
+     * Inserts fake data into the users table.
+     *
+     * @param int $amount The number of rows to insert.
+     */
+    private function insertFakeData($amount = 1)
+    {
+        if ((int)$amount < 1)
+        {
+            $amount = 1;
+        }
+
+        for ($i = 0; $i < $amount; $i++)
+        {
+            Query::create('INSERT')
+                ->table('users')
+                ->values(array(
+                    'user_name' => '{string:user_name}',
+                    'user_email' => '{string:user_email}',
+                    'user_status' => '{int:user_status}',
+                ))
+                ->variables(array(
+                    'user_name' => 'user'. ($i + 1),
+                    'user_email' => 'user'. ($i + 1). '@outlook.com',
+                    'user_status' => mt_rand(0, 2)
+                ))->execute();
+        }
     }
 }
  
