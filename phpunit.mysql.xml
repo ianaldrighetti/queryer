@@ -2,11 +2,19 @@
          convertNoticesToExceptions="true" convertWarningsToExceptions="true" forceCoversAnnotation="false"
          mapTestClassNameToCoveredClassName="false" processIsolation="false" stopOnError="false" stopOnFailure="false"
          stopOnIncomplete="false" stopOnSkipped="false" strict="false" verbose="true" bootstrap="vendor/autoload.php">
+    <php>
+        <var name="db_host" value="localhost" />
+        <var name="db_user" value="root" />
+        <var name="db_pwd" value="" />
+        <var name="db_name" value="queryer_tests" />
+    </php>
+
     <testsuites>
-        <testsuite name="Queryer Test Suite">
-            <directory>./QueryerTests/</directory>
+        <testsuite name="Queryer MysqlDriver Test Suite">
+            <directory>./QueryerDbTests/Mysql</directory>
         </testsuite>
     </testsuites>
+
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory>./Queryer</directory>
