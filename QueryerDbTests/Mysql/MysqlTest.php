@@ -176,11 +176,41 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             ->variables(array(
                 'user_id' => 1,
                 'user_name' => $userName,
-            ))->execute();
+            ))
+            ->execute();
+
+        var_dump($result->getErrorCode());
+        var_dump($result->getErrorMessage());
+        var_dump($result->getQuery());
 
         // Make sure it worked!
         $this->assertTrue($result->success());
         $this->assertEquals(1, $result->getAffectedRows());
+
+        // Now we should select the data.
+        $result = Query::create('SELECT')
+            ->selectExpr('user_name')
+            ->from('users')
+            ->where('user_id = {int:user_id}')
+            ->variables(array(
+                'user_id' => 1
+            ))
+            ->execute();
+
+        $this->assertTrue($result->success());
+
+        // Make sure it was actually updated.
+        $row = $result->fetchAssoc();
+        $this->assertArrayHasKey('user_name', $row);
+        $this->assertEquals($userName, $row['user_name']);
+    }
+
+    /**
+     * Tests deleting data.
+     */
+    public function testDelete()
+    {
+
     }
 
     /**
