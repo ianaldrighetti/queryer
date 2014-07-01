@@ -179,10 +179,6 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             ))
             ->execute();
 
-        var_dump($result->getErrorCode());
-        var_dump($result->getErrorMessage());
-        var_dump($result->getQuery());
-
         // Make sure it worked!
         $this->assertTrue($result->success());
         $this->assertEquals(1, $result->getAffectedRows());
