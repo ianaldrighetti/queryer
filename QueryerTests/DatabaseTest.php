@@ -161,6 +161,31 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests to ensure the connect method returns true when the connection is successful.
+     */
+    public function testConnectReturn()
+    {
+        Database::setEngineName('Mock');
+        Database::setEngineOptions(array());
+        Database::setDriverClassName('\\QueryerTests\\Mocker\\MockDatabaseDriver');
+
+        $this->assertTrue(Database::connect());
+    }
+
+    /**
+     * Tests to ensure the connect method throws an Exception when an error occurs.
+     *
+     * @expectedException \Queryer\Exception\DatabaseException
+     * @expectedExceptionCode \Queryer\Exception\DatabaseException::ENGINE_NOT_SPECIFIED
+     */
+    public function testConnectException()
+    {
+        Database::setDriverClassName('\\QueryerTests\\Mocker\\MockDatabaseDriver');
+
+        Database::connect();
+    }
+
+    /**
      * Tests to ensure that when sanitize is called, it invokes the driver's sanitize method.
      */
     public function testSanitize()

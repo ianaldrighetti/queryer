@@ -124,9 +124,30 @@ class Database
     }
 
     /**
+     * Connects to the database. Under the hood this simply invokes the getInstance method, but returns a boolean
+     * instead. This should be called as soon as the engine is selected and the options set to catch any database
+     * connection issues early on.
+     *
+     * @return bool
+     * @see getInstance
+     * @throws Exception\DatabaseException Thrown if no database engine is set.
+     * @throws Exception\DatabaseException Thrown if an error occurs while attempting to connect to the database.
+     */
+    public static function connect()
+    {
+        self::getInstance();
+
+        // If we're still going, it's all good! (a DatabaseException will be thrown otherwise).
+        return true;
+    }
+
+    /**
      * Returns an instance of the current database.
      *
      * @return Database
+     * @throws Exception\DatabaseException Thrown if no database engine is set. If the connect method was invoked this
+     *                                     will never occur.
+     * @see connect
      */
     public static function getInstance()
     {
