@@ -89,12 +89,10 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
                 $GLOBALS['db_user'],
                 $GLOBALS['db_pwd']
             );
-
-            echo 'Connected to MySQL database.', "\n";
         }
         catch (\PDOException $ex)
         {
-            echo 'Connection failed: '. $ex->getMessage();
+            echo "\n\n". 'Connection to MySQL server failed: '. $ex->getMessage();
             exit(255);
         }
 
@@ -112,9 +110,9 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests to ensure inserting data works.
+     * Tests to ensure inserting data works (along with retrieving that data as well).
      */
-    public function testInsert()
+    public function testInsertAndSelect()
     {
         // The row of data (user_id is what we expect it's value to be, since it is AUTO INCREMENT).
         $row = array(
@@ -134,11 +132,18 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             ->variables(array(
                 'user_name' => $row['user_name'],
                 'user_email' => $row['user_email'],
-                'user_status' => $row['user_stats']
+                'user_status' => $row['user_status']
             ))->execute();
 
         $this->assertTrue($result->success());
         $this->assertEquals($row['user_id'], $result->getInsertId());
+
+        // Fetch the row.
+        $actualRow = $result->fetchAssoc();
+        $this->assertTrue(is_array($actualRow));
+
+        // Now make sure it is right.
+        $this->assertEquals($row, $actualRow);
     }
 }
  
