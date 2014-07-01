@@ -145,4 +145,12 @@ abstract class DatabaseDriverResult
      * @return array|bool
      */
     abstract public function fetchRow();
+
+    /**
+     * Returns a string containing the generated query that was ran against the database to result in this object. This
+     * is potentially useful for debugging.
+     *
+     * @return string
+     */
+    abstract public function getQuery();
 }

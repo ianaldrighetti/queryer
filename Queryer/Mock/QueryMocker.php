@@ -191,7 +191,8 @@ class QueryMocker implements QueryMockerInterface
         if (!is_null($this->result))
         {
             $result = $this->result;
-        } else if(!is_null($this->results))
+        }
+        else if(!is_null($this->results))
         {
             // Make sure we can serve this result.
             if ($this->resultIndex >= count($this->results))
@@ -219,7 +220,8 @@ class QueryMocker implements QueryMockerInterface
             $result['affectedRows'],
             $result['insertId'],
             $result['errorCode'],
-            $result['errorMessage']
+            $result['errorMessage'],
+            $options
         );
     }
 }

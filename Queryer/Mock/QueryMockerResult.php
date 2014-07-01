@@ -39,6 +39,12 @@ class QueryMockerResult extends DatabaseDriverResult
     private $maxIndex;
 
     /**
+     * The array of query options.
+     * @var array
+     */
+    private $queryOptions;
+
+    /**
      * Initializes the Mock Driver Result with results and information.
      *
      * @param array|bool $result Either an array (containing child arrays that will act as rows [column name => value]).
@@ -48,11 +54,20 @@ class QueryMockerResult extends DatabaseDriverResult
      * @param int $insertId The last generated ID.
      * @param int $errorCode The error code.
      * @param string $errorMessage The error message.
+     * @param array $queryOptions The array of query options.
      */
-    public function __construct($result, $affectedRows = 0, $insertId = 0, $errorCode = -1, $errorMessage = null)
+    public function __construct(
+            $result,
+            $affectedRows = 0,
+            $insertId = 0,
+            $errorCode = -1,
+            $errorMessage = null,
+            array $queryOptions = array()
+        )
     {
         $this->affectedRows = $affectedRows;
         $this->insertId = $insertId;
+        $this->queryOptions = $queryOptions;
 
         // Set up our index range.
         $this->currentIndex = 0;
@@ -165,5 +180,15 @@ class QueryMockerResult extends DatabaseDriverResult
 
         // Return the entry and increment the current index by one.
         return $result[$this->currentIndex++];
+    }
+
+    /**
+     * Returns the array of query options.
+     *
+     * @return array
+     */
+    public function getQuery()
+    {
+        return $this->queryOptions;
     }
 }
