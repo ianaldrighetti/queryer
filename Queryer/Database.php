@@ -50,6 +50,7 @@ class Database
      *
      * @param string $engineName The name of the database driver.
      * @param array $engineOptions An array of options to pass to the database driver.
+     * @throws Exception\DatabaseException Thrown if no database engine is set.
      * @throws Exception\DatabaseException Thrown if the database engine does not exist.
      * @throws Exception\DatabaseException Thrown if the database engine can not connect to the database.
      */
@@ -194,9 +195,18 @@ class Database
      *
      * @param string $engineName
      * @return string
+     * @throws Exception\DatabaseException Thrown if no database engine is set.
      */
     public static function getDriverClassName($engineName)
     {
+        if (is_null($engineName))
+        {
+            throw new DatabaseException(
+                'No database engine was specified.',
+                DatabaseException::ENGINE_NOT_SPECIFIED
+            );
+        }
+
         if (!is_null(self::$driverClassName))
         {
             return self::$driverClassName;

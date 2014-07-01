@@ -36,4 +36,9 @@ class DatabaseException extends \Exception
      * Indicates that the specified database driver was not found.
      */
     const DRIVER_NOT_FOUND = 5;
+
+    /**
+     * Indicates that no database engine was ever specified.
+     */
+    const ENGINE_NOT_SPECIFIED = 6;
 }

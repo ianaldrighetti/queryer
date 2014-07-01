@@ -66,7 +66,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         $driverClassName = '\\My\\Driver\\Class';
 
         Database::setDriverClassName($driverClassName);
-        $this->assertEquals($driverClassName, Database::getDriverClassName(null));
+        $this->assertEquals($driverClassName, Database::getDriverClassName('Mock'));
     }
 
     /**
@@ -92,6 +92,28 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function testGetInstance()
     {
         $this->assertInstanceOf('\\Queryer\\Database', $this->getMockDatabase('', array()));
+    }
+
+    /**
+     * Tests to ensure that the getDriverClassName method throws an Exception when no engine is set.
+     *
+     * @expectedException \Queryer\Exception\DatabaseException
+     * @expectedExceptionCode \Queryer\Exception\DatabaseException::ENGINE_NOT_SPECIFIED
+     */
+    public function testGetDriverClassNameEngineNotSetException()
+    {
+        Database::getDriverClassName(null);
+    }
+
+    /**
+     * Tests to ensure that the getInstance method throws an Exception when no engine is set.
+     *
+     * @expectedException \Queryer\Exception\DatabaseException
+     * @expectedExceptionCode \Queryer\Exception\DatabaseException::ENGINE_NOT_SPECIFIED
+     */
+    public function testGetInstanceEngineNotSetException()
+    {
+        Database::getInstance();
     }
 
     /**
@@ -129,9 +151,9 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
             'db_name' => 'db',
         );
 
-        $db = $this->getMockDatabase(null, $engineOptions);
+        $db = $this->getMockDatabase('Mock', $engineOptions);
 
-        /** @var \QueryerTests\Mock\MockDatabaseDriver $driver */
+        /** @var \QueryerTests\Mocker\MockDatabaseDriver $driver */
         $driver = $db->getDriver();
 
         // The connect method should have been called.
@@ -143,13 +165,13 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testSanitize()
     {
-        $db = $this->getMockDatabase(null, array());
+        $db = $this->getMockDatabase('Mock', array());
 
         // Invoke sanitize.
         $str = 'Sanitize me!!!';
         $db->sanitize($str);
 
-        /** @var \QueryerTests\Mock\MockDatabaseDriver $driver */
+        /** @var \QueryerTests\Mocker\MockDatabaseDriver $driver */
         $driver = $db->getDriver();
 
         $this->assertEquals($str, $driver->getSanitizeInvokedWith());
@@ -160,7 +182,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecute()
     {
-        $db = $this->getMockDatabase(null, array());
+        $db = $this->getMockDatabase('Mock', array());
 
         // Invoke execute.
         $execute = array(
@@ -169,7 +191,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         );
         $db->execute($execute);
 
-        /** @var \QueryerTests\Mock\MockDatabaseDriver $driver */
+        /** @var \QueryerTests\Mocker\MockDatabaseDriver $driver */
         $driver = $db->getDriver();
 
         $this->assertEquals($execute, $driver->getExecuteInvokedWith());
@@ -180,13 +202,13 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTimestamp()
     {
-        $db = $this->getMockDatabase(null, array());
+        $db = $this->getMockDatabase('Mock', array());
 
         // Invoke getTimestamp.
         $timestamp = 482190;
         $db->getTimestamp($timestamp);
 
-        /** @var \QueryerTests\Mock\MockDatabaseDriver $driver */
+        /** @var \QueryerTests\Mocker\MockDatabaseDriver $driver */
         $driver = $db->getDriver();
 
         $this->assertEquals($timestamp, $driver->getGetTimestampInvokedWith());
