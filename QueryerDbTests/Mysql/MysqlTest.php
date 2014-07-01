@@ -82,11 +82,21 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             return $this->pdo;
         }
 
-        $this->pdo = new PDO(
-            'mysql:dbname=' . $GLOBALS['db_name'] . ';host=' . $GLOBALS['db_host'],
-            $GLOBALS['db_user'],
-            $GLOBALS['db_pwd']
-        );
+        try
+        {
+            $this->pdo = new PDO(
+                'mysql:dbname=' . $GLOBALS['db_name'] . ';host=' . $GLOBALS['db_host'],
+                $GLOBALS['db_user'],
+                $GLOBALS['db_pwd']
+            );
+
+            echo 'Connected to MySQL database.', "\n";
+        }
+        catch (\PDOException $ex)
+        {
+            echo 'Connection failed: '. $ex->getMessage();
+            exit(255);
+        }
 
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
