@@ -218,10 +218,28 @@ class MysqlDriver extends DatabaseDriver
     {
         return '
         UPDATE '. (!empty($options['ignore']) ? 'IGNORE ' : ''). $options['table']. '
-        SET '. $options['values']. '
+        SET '. self::getUpdateSetValues($options['values']). '
         WHERE '. (!empty($options['where_condition']) ? $options['where_condition'] : '1 = 1'). (!empty($options['order_by']) ? '
         ORDER BY '. $options['order_by'] : ''). (!empty($options['limit']) ? '
         LIMIT '. $options['limit'] : '');
+    }
+
+    /**
+     * Generates the SET clause for an UPDATE query.
+     *
+     * @param array $values An array with the key being the column name and the value being the value to set the column
+     *                      to.
+     * @return string
+     */
+    private static function getUpdateSetValues(array $values)
+    {
+        $columns = array();
+        foreach ($values as $column => $value)
+        {
+            $columns[] = $column. ' = '. (is_null($value) ? 'NULL' : $value);
+        }
+
+        return implode(', ', $columns);
     }
 
     /**
