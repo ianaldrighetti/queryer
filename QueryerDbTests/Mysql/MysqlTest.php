@@ -138,9 +138,18 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result->success());
         $this->assertEquals($row['user_id'], $result->getInsertId());
 
+        // Now select the data.
+        $result = Query::create('SELECT')
+            ->selectExpr('user_id, user_name, user_email, user_status')
+            ->from('users')
+            ->where('user_id = {int:user_id}')
+            ->variables(array(
+                'user_id' => $row['user_id']
+            ))
+            ->execute();
+
         // Fetch the row.
         $actualRow = $result->fetchAssoc();
-        var_dump($actualRow);
         $this->assertTrue(is_array($actualRow));
 
         // Now make sure it is right.
@@ -154,6 +163,24 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     {
         // Insert some fake data.
         $this->insertFakeData(3);
+
+        $userName = 'better name';
+
+        // Update the table data.
+        $result = Query::create('UPDATE')
+            ->table('users')
+            ->values(array(
+                'user_name' => '{string:user_name}',
+            ))
+            ->where('user_id = {int:user_id}')
+            ->variables(array(
+                'user_id' => 1,
+                'user_name' => $userName,
+            ))->execute();
+
+        // Make sure it worked!
+        $this->assertTrue($result->success());
+        $this->assertEquals(1, $result->getAffectedRows());
     }
 
     /**
