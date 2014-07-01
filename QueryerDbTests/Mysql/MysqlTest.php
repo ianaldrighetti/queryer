@@ -77,7 +77,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
      */
     private function getPdoObject()
     {
-        if (is_null($this->pdo))
+        if (!is_null($this->pdo))
         {
             return $this->pdo;
         }
