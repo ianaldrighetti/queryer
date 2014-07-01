@@ -40,6 +40,9 @@ class MysqlDriver extends DatabaseDriver
      */
     public function connect(array $options)
     {
+        // Make sure all necessary options are there.
+        $this->checkConnectionOptions($options);
+
         $this->con = $this->getMysqliInstance($options);
 
         if (mysqli_connect_error() !== null)
@@ -69,6 +72,37 @@ class MysqlDriver extends DatabaseDriver
         }
 
         return new mysqli($options['host'], $options['user'], $options['pwd'], $options['db_name']);
+    }
+
+    /**
+     * Checks to ensure that all necessary options have been supplied for connecting to the database.
+     *
+     * @param array &$options
+     * @throws \Queryer\Exception\DatabaseException Thrown if there is an option missing.
+     */
+    private function checkConnectionOptions(array &$options)
+    {
+        $required = array('host', 'user', 'db_name');
+
+        foreach ($required as $requiredOption)
+        {
+            // Just check if the key exists
+            if (!array_key_exists($requiredOption, $options))
+            {
+                throw new DatabaseException(
+                    sprintf(
+                        'The MySQL driver requires the following engine options: %s.',
+                        implode(', ', $required)
+                    )
+                );
+            }
+        }
+
+        // If the password option is missing, default to no password.
+        if (!array_key_exists('pwd', $options))
+        {
+            $options['pwd'] = '';
+        }
     }
 
     /**

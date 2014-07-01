@@ -36,7 +36,12 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
         MysqlDriver::setMysqliInstance($this->mysqliMocker);
 
         $this->mysqlDriver = new MysqlDriver();
-        $this->mysqlDriver->connect(array());
+        $this->mysqlDriver->connect(array(
+            'host' => '',
+            'user' => '',
+            'pwd' => '',
+            'db_name' => '',
+        ));
     }
 
     /**
@@ -64,6 +69,39 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
 
         // And that it was passed the options.
         $this->assertEquals($options, $this->mysqliMocker->getSetOptionsInvokedWith());
+    }
+
+    /**
+     * Tests to ensure that if no password option is supplied it will default to empty ('').
+     */
+    public function testConnectWithoutPwd()
+    {
+        $options = array(
+            'host' => 'localhost',
+            'user' => 'me',
+            'db_name' => 'database',
+        );
+
+        $this->assertTrue($this->mysqlDriver->connect($options));
+
+        $invokedOptions = $this->mysqliMocker->getSetOptionsInvokedWith();
+        $this->assertArrayHasKey('pwd', $invokedOptions);
+        $this->assertEquals('', $invokedOptions['pwd']);
+    }
+
+    /**
+     * Tests to ensure that the connect method throws an exception when there are missing options.
+     *
+     * @expectedException \Queryer\Exception\DatabaseException
+     */
+    public function testConnectMissingOptionsException()
+    {
+        // Just give it one.
+        $options = array(
+            'host' => 'localhost',
+        );
+
+        $this->mysqlDriver->connect($options);
     }
 
     /**
@@ -215,6 +253,15 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('
         INSERT IGNORE INTO mytable
+        (`user_id`, `user_name`)
+        VALUES(1, username)', $result);
+
+        // Now with a REPLACE.
+        $options['type'] = 'REPLACE';
+        $result = MysqlDriver::generateQuery($options);
+
+        $this->assertEquals('
+        REPLACE IGNORE INTO mytable
         (`user_id`, `user_name`)
         VALUES(1, username)', $result);
     }
