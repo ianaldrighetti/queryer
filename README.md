@@ -13,4 +13,4 @@ Queryer currently only supports MySQL, though it can be extended to support othe
 
 ## Documentation
 
-No documentation yet!
+You can see all the documentation for Queryer within our [Wiki](https://github.com/ianaldrighetti/queryer/wiki).
