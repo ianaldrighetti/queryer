@@ -17,7 +17,7 @@ class DatabaseToolsTest extends \PHPUnit_Framework_TestCase
     {
         $dbTest = new DatabaseTest();
 
-        DatabaseTools::setDatabaseInstance($dbTest->getMockDatabase(null, array()));
+        DatabaseTools::setDatabaseInstance($dbTest->getMockDatabase('Mock', array()));
     }
 
     /**
