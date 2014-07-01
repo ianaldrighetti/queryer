@@ -210,7 +210,18 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
+        $this->insertFakeData(5);
 
+        $result = Query::create('DELETE')
+            ->from('users')
+            ->where('user_id < {int:lt}')
+            ->variables(array(
+                'lt' => 3,
+            ))
+            ->execute();
+
+        $this->assertTrue($result->success());
+        $this->assertEquals(2, $result->getAffectedRows());
     }
 
     /**

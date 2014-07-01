@@ -218,7 +218,9 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
             'type' => 'UPDATE',
             'ignore' => true,
             'table' => 'tabletoupdate',
-            'values' => 'myName = \'newName\'',
+            'values' => array(
+                'myName' => '\'newName\''
+            ),
             'where_condition' => 'myUserId = 100',
             'order_by' => 'myName ASC',
             'limit' => 2,

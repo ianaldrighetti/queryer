@@ -263,10 +263,9 @@ class Query
     }
 
     /**
-     * Sets the values to be inserted or replaced in a table (column name => value pair). If this is for an UPDATE
-     * query it is expected to be a string.
+     * Sets the values to be inserted, replaced or updated in a table (column name => value pair).
      *
-     * @param array|string $values
+     * @param array $values
      * @return $this
      */
     public function values($values)
