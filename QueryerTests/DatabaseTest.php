@@ -238,5 +238,24 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($timestamp, $driver->getGetTimestampInvokedWith());
     }
+
+    /**
+     * Tests to ensure that auto escaping is disabled by default.
+     */
+    public function testSetAutoEscapeDefault()
+    {
+        $this->assertFalse(Database::getAutoEscape());
+    }
+
+    /**
+     * Tests to ensure setting the auto escape option works.
+     */
+    public function testSetAutoEscape()
+    {
+        Database::setAutoEscape(true);
+        $this->assertTrue(Database::getAutoEscape());
+
+        // Set it back to the default.
+        Database::setAutoEscape(false);
+    }
 }
- 

@@ -46,6 +46,12 @@ class Database
     private static $driverClassName = null;
 
     /**
+     * Indicates whether strings should be passed through the htmlspecialchars function.
+     * @var bool
+     */
+    private static $autoEscape = false;
+
+    /**
      * Initializes the Database instance by making a connection to the database.
      *
      * @param string $engineName The name of the database driver.
@@ -250,5 +256,25 @@ class Database
     public static function setDriverClassName($driverClassName)
     {
         self::$driverClassName = $driverClassName;
+    }
+
+    /**
+     * Sets whether strings should be automatically passed through the htmlspecialchars function.
+     *
+     * @param bool $autoEscape
+     */
+    public static function setAutoEscape($autoEscape)
+    {
+        self::$autoEscape = !empty($autoEscape);
+    }
+
+    /**
+     * Returns whether strings should be automatically passed through the htmlspecialchars function.
+     *
+     * @return bool
+     */
+    public static function getAutoEscape()
+    {
+        return self::$autoEscape;
     }
 } 
