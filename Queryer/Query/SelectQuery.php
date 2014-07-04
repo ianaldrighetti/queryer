@@ -8,7 +8,7 @@ namespace Queryer\Query;
 class SelectQuery extends QueryType
 {
     /**
-     * Initializes the SELECT builder.
+     * Initializes the SELECT query builder.
      */
     public function __construct()
     {
