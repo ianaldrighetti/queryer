@@ -41,4 +41,9 @@ class DatabaseException extends \Exception
      * Indicates that no database engine was ever specified.
      */
     const ENGINE_NOT_SPECIFIED = 6;
+
+    /**
+     * A general error that indicates the query that being executed is not valid.
+     */
+    const INVALID_QUERY = 7;
 }

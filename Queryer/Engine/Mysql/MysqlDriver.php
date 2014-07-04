@@ -110,6 +110,7 @@ class MysqlDriver extends DatabaseDriver
      *
      * @param array $options
      * @return \Queryer\Engine\Mysql\MysqlDriverResult
+     * @throws \Queryer\Exception\DatabaseException Thrown if there are no rows or row keys do not match.
      */
     public function execute(array $options)
     {
@@ -137,6 +138,7 @@ class MysqlDriver extends DatabaseDriver
      *
      * @param array $options
      * @return string
+     * @throws \Queryer\Exception\DatabaseException Thrown if there are no rows or row keys do not match.
      */
     public static function generateQuery($options)
     {
@@ -246,13 +248,98 @@ class MysqlDriver extends DatabaseDriver
      *
      * @param array $options
      * @return string
+     * @throws \Queryer\Exception\DatabaseException Thrown if there are no rows or row keys do not match.
      */
     private static function generateInsertOrReplaceQuery($options)
     {
         return '
-        '. ($options['type'] == 'INSERT' ? 'INSERT' : 'REPLACE'). ' '. (!empty($options['ignore']) ? 'IGNORE ' : ''). 'INTO '. $options['table']. '
-        (`'. implode('`, `', array_keys($options['values'])). '`)
-        VALUES('. implode(', ', array_values($options['values'])). ')';
+        '. ($options['type'] == 'INSERT' ? 'INSERT' : 'REPLACE'). ' '.
+        (!empty($options['ignore']) && $options['type'] == 'INSERT' ? 'IGNORE ' : ''). 'INTO '. $options['table']. '
+        (`'. implode('`, `', self::getInsertColumnNames($options['rows'])). '`)
+        VALUES'. implode(',', self::getInsertColumnValues($options['rows']));
+    }
+
+    /**
+     * Generates the column names array for an INSERT or REPLACE query.
+     *
+     * @param array $rows
+     * @return array
+     * @throws \Queryer\Exception\DatabaseException Thrown if there are no rows or row keys do not match.
+     */
+    private static function getInsertColumnNames(array $rows)
+    {
+        $rowCount = count($rows);
+
+        // We can't have 0 rows...
+        if ($rowCount == 0)
+        {
+            throw new DatabaseException(
+                'There must be at least one row specified to insert or replace.',
+                DatabaseException::INVALID_QUERY
+            );
+        }
+
+        // We will go with the first row (since there must be at least one) to use to match against all others.
+        $columns = array_keys($rows[0]);
+
+        $mismatch = array();
+        for ($i = 1; $i < $rowCount; $i++)
+        {
+            // If keys don't match, add it to the mismatches.
+            if ($columns != array_keys($rows[$i]))
+            {
+                $mismatch[] = $i + 1;
+            }
+        }
+
+        if (count($mismatch) > 0)
+        {
+            throw new DatabaseException(
+                sprintf(
+                    'Row keys do not match, found at row values %s.',
+                    self::getInsertDoNotMatchStatement($mismatch)
+                ),
+                DatabaseException::INVALID_QUERY
+            );
+        }
+
+        return $columns;
+    }
+
+    /**
+     * Returns a statement such as "1, 2 and 4."
+     *
+     * @param array $mismatches
+     * @return string
+     */
+    private static function getInsertDoNotMatchStatement(array $mismatches)
+    {
+        if (count($mismatches) == 1)
+        {
+            return $mismatches[0];
+        }
+
+        $chunks = array_chunk($mismatches, count($mismatches) - 1);
+
+        // Make it nice and pretty.
+        return implode(', ', $chunks[0]). ' and '. $chunks[1][0];
+    }
+
+    /**
+     * Generates the rows for the VALUES component of the INSERT or REPLACE query.
+     *
+     * @param array $rows
+     * @return array
+     */
+    private static function getInsertColumnValues(array $rows)
+    {
+        $data = array();
+        foreach ($rows as $row)
+        {
+            $data[] = '('. implode(', ', array_values($row)). ')';
+        }
+
+        return $data;
     }
 
     /**

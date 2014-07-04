@@ -226,31 +226,61 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testInsertorReplaceQuery()
     {
-        $options = array(
-            'type' => 'INSERT',
-            'ignore' => true,
-            'table' => 'mytable',
-            'values' => array(
+        $query = Query::insert()
+            ->ignore(true)
+            ->into('mytable')
+            ->values(array(
                 'user_id' => 1,
-                'user_name' => 'username',
-            )
-        );
+                'user_name' => '\'username\'',
+            ))
+            ->values(array(
+                'user_id' => 2,
+                'user_name' => '\'another name\''
+            ));
 
-        $result = MysqlDriver::generateQuery($options);
+        $result = MysqlDriver::generateQuery($query->getOptions());
 
         $this->assertEquals('
         INSERT IGNORE INTO mytable
         (`user_id`, `user_name`)
-        VALUES(1, username)', $result);
+        VALUES(1, \'username\'),(2, \'another name\')', $result);
 
         // Now with a REPLACE.
+        $options = $query->getOptions();
         $options['type'] = 'REPLACE';
         $result = MysqlDriver::generateQuery($options);
 
         $this->assertEquals('
-        REPLACE IGNORE INTO mytable
+        REPLACE INTO mytable
         (`user_id`, `user_name`)
-        VALUES(1, username)', $result);
+        VALUES(1, \'username\'),(2, \'another name\')', $result);
+    }
+
+    /**
+     * @expectedException \Queryer\Exception\DatabaseException
+     * @expectedExceptionMessage Row keys do not match, found at row values 2, 3 and 4.
+     * @expectedExceptionCode \Queryer\Exception\DatabaseException::INVALID_QUERY
+     */
+    public function testInsertRowsDoNotMatchException()
+    {
+        $query = Query::insert()
+            ->ignore(true)
+            ->into('mytable')
+            ->values(array(
+                'user_id' => 1,
+                'user_name' => '\'username\''
+            ))
+            ->values(array(
+                'user_id' => 2
+            ))
+            ->values(array(
+                'random' => 'yup'
+            ))
+            ->values(array(
+                'mismatch' => 'yes'
+            ));
+
+        MysqlDriver::generateQuery($query->getOptions());
     }
 
     /**
