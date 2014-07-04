@@ -14,51 +14,30 @@ use Queryer\Query;
 class QueryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Ensures that the Query::create method returns an instance of a query.
-     */
-    public function testCreateMethod()
-    {
-        $query = Query::create('SELECT');
-
-        $this->assertInstanceOf('\Queryer\Query', $query);
-    }
-
-    /**
-     * Ensures that an InvalidArgumentException is thrown when an unknown type is supplied to the create method.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The query type UNKNOWN is unknown.
-     */
-    public function testInvalidArgumentException()
-    {
-        Query::create('Unknown');
-    }
-
-    /**
      * Ensures that a SELECT query is properly built.
      */
     public function testSelectQuery()
     {
-        $query = Query::create('SELECT');
+        $query = Query::select();
 
         $options = array(
             'type' => 'SELECT',
             'distinct' => true,
-            'select_expr' => 'jt.user_id, myt.user_name',
-            'from' => 'mytable',
-            'from_alias' => 'myt',
+            'expr' => 'jt.user_id, myt.user_name',
+            'table' => 'mytable',
+            'alias' => 'myt',
             'joins' => array(
                 array(
                     'type' => 'RIGHT',
                     'table' => 'joinedtable',
-                    'table_alias' => 'jt',
+                    'alias' => 'jt',
                     'condition' => 'jt.user_id = myt.user_id',
                 )
             ),
-            'where_condition' => 'jt.user_id > 0',
-            'group_by' => 'jt.user_name ASC',
+            'condition' => 'jt.user_id > 0',
+            'groupBy' => 'jt.user_name ASC',
             'having' => 'COUNT(*) > 1',
-            'order_by' => 'jt.user_id ASC',
+            'orderBy' => 'jt.user_id ASC',
             'limit' => 10,
             'offset' => 20,
             'variables' => array(
@@ -67,18 +46,17 @@ class QueryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $query->distinct($options['distinct'])
-            ->selectExpr($options['select_expr'])
-            ->from($options['from'])
-            ->alias($options['from_alias'])
-            ->join($options['joins'][0]['type'], $options['joins'][0]['table'], $options['joins'][0]['table_alias'], $options['joins'][0]['condition'])
-            ->where($options['where_condition'])
-            ->groupBy($options['group_by'])
+        $query->isDistinct($options['distinct'])
+            ->expr($options['expr'])
+            ->from($options['table'], $options['alias'])
+            ->join($options['joins'][0]['type'], $options['joins'][0]['table'], $options['joins'][0]['alias'], $options['joins'][0]['condition'])
+            ->where($options['condition'])
+            ->groupBy($options['groupBy'])
             ->having($options['having'])
-            ->orderBy($options['order_by'])
+            ->orderBy($options['orderBy'])
             ->limit($options['limit'])
             ->offset($options['offset'])
-            ->variables($options['variables']);
+            ->replace($options['variables']);
 
         $queryOptions = $query->getOptions();
         foreach ($options as $key => $value)
@@ -93,23 +71,22 @@ class QueryTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateQuery()
     {
-        $query = Query::create('UPDATE');
+        $query = Query::update();
 
         $options = array(
             'type' => 'UPDATE',
-            'ignore' => true,
             'table' => 'updateTable',
-            'values' => 'user_id = user_id + 1, user_name = \'name\'',
-            'where_condition' => 'user_id = 100',
-            'order_by' => 'user_id DESC',
+            'set' => array(
+                'user_id' => 'user_id + 1',
+                'user_name' => '\'name\''
+            ),
+            'condition' => 'user_id = 100',
             'limit' => 1,
         );
 
-        $query->ignore($options['ignore'])
-            ->table($options['table'])
-            ->values($options['values'])
-            ->where($options['where_condition'])
-            ->orderBy($options['order_by'])
+        $query->table($options['table'])
+            ->set($options['set'])
+            ->where($options['condition'])
             ->limit($options['limit']);
 
         $queryOptions = $query->getOptions();
@@ -125,20 +102,22 @@ class QueryTest extends \PHPUnit_Framework_TestCase
      */
     public function testReplaceQuery()
     {
-        $query = Query::create('REPLACE');
+        $query = Query::replace();
 
         $options = array(
             'type' => 'REPLACE',
             'table' => 'replaceTable',
-            'values' => array(
-                'user_id' => 1,
-                'user_name' => 'My Name',
+            'rows' => array(
+                array(
+                    'user_id' => 1,
+                    'user_name' => 'My Name',
+                )
             ),
             'keys' => array('user_id')
         );
 
-        $query->table($options['table'])
-            ->values($options['values'])
+        $query->into($options['table'])
+            ->values($options['rows'][0])
             ->keys($options['keys']);
 
         $queryOptions = $query->getOptions();

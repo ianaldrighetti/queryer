@@ -122,14 +122,14 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             'user_status' => 2,
         );
 
-        $result = Query::create('INSERT')
-            ->table('users')
+        $result = Query::insert()
+            ->into('users')
             ->values(array(
                 'user_name' => '{string:user_name}',
                 'user_email' => '{string:user_email}',
                 'user_status' => '{int:user_status}',
             ))
-            ->variables(array(
+            ->replace(array(
                 'user_name' => $row['user_name'],
                 'user_email' => $row['user_email'],
                 'user_status' => $row['user_status']
@@ -139,11 +139,11 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($row['user_id'], $result->getInsertId());
 
         // Now select the data.
-        $result = Query::create('SELECT')
-            ->selectExpr('user_id, user_name, user_email, user_status')
+        $result = Query::select()
+            ->expr('user_id, user_name, user_email, user_status')
             ->from('users')
             ->where('user_id = {int:user_id}')
-            ->variables(array(
+            ->replace(array(
                 'user_id' => $row['user_id']
             ))
             ->execute();
@@ -167,13 +167,13 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $userName = 'better name';
 
         // Update the table data.
-        $result = Query::create('UPDATE')
+        $result = Query::update()
             ->table('users')
-            ->values(array(
+            ->set(array(
                 'user_name' => '{string:user_name}',
             ))
             ->where('user_id = {int:user_id}')
-            ->variables(array(
+            ->replace(array(
                 'user_id' => 1,
                 'user_name' => $userName,
             ))
@@ -184,11 +184,11 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $result->getAffectedRows());
 
         // Now we should select the data.
-        $result = Query::create('SELECT')
-            ->selectExpr('user_name')
+        $result = Query::select()
+            ->expr('user_name')
             ->from('users')
             ->where('user_id = {int:user_id}')
-            ->variables(array(
+            ->replace(array(
                 'user_id' => 1
             ))
             ->execute();
@@ -208,10 +208,10 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     {
         $this->insertFakeData(5);
 
-        $result = Query::create('DELETE')
+        $result = Query::delete()
             ->from('users')
             ->where('user_id < {int:lt}')
-            ->variables(array(
+            ->replace(array(
                 'lt' => 3,
             ))
             ->execute();
@@ -234,14 +234,14 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
         for ($i = 0; $i < $amount; $i++)
         {
-            Query::create('INSERT')
-                ->table('users')
+            Query::insert()
+                ->into('users')
                 ->values(array(
                     'user_name' => '{string:user_name}',
                     'user_email' => '{string:user_email}',
                     'user_status' => '{int:user_status}',
                 ))
-                ->variables(array(
+                ->replace(array(
                     'user_name' => 'user'. ($i + 1),
                     'user_email' => 'user'. ($i + 1). '@outlook.com',
                     'user_status' => mt_rand(0, 2)
