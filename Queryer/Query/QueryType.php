@@ -78,10 +78,13 @@ class QueryType
      * Sets an array of variables to replace, where the key is the variable name.
      *
      * @param array $variables
+     * @return $this
      */
     public final function replace(array $variables)
     {
         $this->setOption('variables', $variables);
+
+        return $this;
     }
 
     /**

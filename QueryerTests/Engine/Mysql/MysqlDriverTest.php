@@ -109,11 +109,11 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecute()
     {
-        $query = Query::create('SELECT')
-            ->selectExpr('user_id')
+        $query = Query::select()
+            ->expr('user_id')
             ->from('users')
             ->where('user_id = {int:user_id}')
-            ->variables(array(
+            ->replace(array(
                 'user_id' => 100,
             ));
 
@@ -176,21 +176,21 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
     {
         $options = array(
             'type' => 'SELECT',
-            'select_expr' => 'mycolumn, anothercolumn',
-            'from' => 'mytable',
-            'from_alias' => 'myt',
+            'expr' => 'mycolumn, anothercolumn',
+            'table' => 'mytable',
+            'alias' => 'myt',
             'joins' => array(
                 array(
                     'type' => 'INNER',
                     'table' => 'users',
-                    'table_alias' => 'u',
+                    'alias' => 'u',
                     'condition' => 'u.user_id = myt.user_id',
                 )
             ),
-            'where_condition' => 'u.user_id = 1',
-            'group_by' => 'myt.user_group',
+            'condition' => 'u.user_id = 1',
+            'groupBy' => 'myt.user_group',
             'having' => 'myt.user_id > 1',
-            'order_by' => 'myt.user_id DESC',
+            'orderBy' => 'myt.user_id DESC',
             'limit' => 20,
             'offset' => 60,
         );

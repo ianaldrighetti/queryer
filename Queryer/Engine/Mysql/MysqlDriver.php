@@ -179,13 +179,13 @@ class MysqlDriver extends DatabaseDriver
     {
         return '
         SELECT'. (!empty($options['distinct']) ? ' DISTINCT ' : ''). '
-            '. $options['select_expr']. '
-        FROM '. $options['from']. (!empty($options['from_alias']) ? ' AS '. $options['from_alias'] : '').
+            '. $options['expr']. '
+        FROM '. $options['table']. (!empty($options['alias']) ? ' AS '. $options['alias'] : '').
         (!empty($options['joins']) && is_array($options['joins']) ? self::generateSelectJoins($options['joins']) : ''). '
-        WHERE '. (!empty($options['where_condition']) ? $options['where_condition'] : ' 1 = 1'). (!empty($options['group_by']) ? '
-        GROUP BY '. $options['group_by'] : ''). (!empty($options['group_by']) && !empty($options['having']) ? '
-        HAVING '. $options['having'] : ''). (!empty($options['order_by']) ? '
-        ORDER BY '. $options['order_by'] : ''). (!empty($options['limit']) ? '
+        WHERE '. (!empty($options['condition']) ? $options['condition'] : ' 1 = 1'). (!empty($options['groupBy']) ? '
+        GROUP BY '. $options['groupBy'] : ''). (!empty($options['groupBy']) && !empty($options['having']) ? '
+        HAVING '. $options['having'] : ''). (!empty($options['orderBy']) ? '
+        ORDER BY '. $options['orderBy'] : ''). (!empty($options['limit']) ? '
         LIMIT '. (!empty($options['offset']) ? $options['offset']. ', ' : ''). $options['limit'] : '');
     }
 
@@ -202,7 +202,7 @@ class MysqlDriver extends DatabaseDriver
         foreach ($joins as $join)
         {
             $join_query .= '
-            '. strtoupper($join['type']). ' JOIN '. $join['table']. ' AS '. $join['table_alias']. ' ON '. $join['condition'];
+            '. strtoupper($join['type']). ' JOIN '. $join['table']. ' AS '. $join['alias']. ' ON '. $join['condition'];
         }
 
         return $join_query;

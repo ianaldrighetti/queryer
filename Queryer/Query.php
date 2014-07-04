@@ -5,6 +5,7 @@ use InvalidArgumentException;
 use Queryer\Mock\QueryMockerInterface;
 use Queryer\Query\DeleteQuery;
 use Queryer\Query\InsertQuery;
+use Queryer\Query\QueryType;
 use Queryer\Query\ReplaceQuery;
 use Queryer\Query\SelectQuery;
 use Queryer\Query\UpdateQuery;
@@ -329,7 +330,7 @@ class Query
      */
     public static function setMocker(QueryMockerInterface $mock)
     {
-        self::$mocker = $mock;
+        QueryType::setMocker($mock);
     }
 
     /**
@@ -339,7 +340,7 @@ class Query
      */
     public static function getMocker()
     {
-        return self::$mocker;
+        return QueryType::getMocker();
     }
 
     /**
@@ -349,7 +350,7 @@ class Query
      */
     public static function clearMocker()
     {
-        self::$mocker = null;
+        QueryType::clearMocker();
     }
 
     /**
