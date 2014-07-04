@@ -56,11 +56,12 @@ class QueryType
      * Returns the options value.
      *
      * @param string $option The option name.
+     * @param mixed $default The value to return if the option is not set. Defaults to null.
      * @return mixed The options value, or null if it does not exist.
      */
-    protected function getOption($option)
+    protected function getOption($option, $default = null)
     {
-        return array_key_exists($option, $this->options) ? $this->options[$option] : null;
+        return array_key_exists($option, $this->options) ? $this->options[$option] : $default;
     }
 
     /**
