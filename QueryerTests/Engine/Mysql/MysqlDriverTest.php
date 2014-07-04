@@ -288,19 +288,17 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteQuery()
     {
-        $options = array(
-            'type' => 'DELETE',
-            'from' => 'mytable',
-            'where_condition' => '1 = 1',
-            'order_by' => 'user_id DESC',
-            'limit' => 100,
-        );
+        $query = Query::delete()
+            ->from('mytable')
+            ->where('user_id > 3')
+            ->orderBy('user_id DESC')
+            ->limit(100);
 
-        $result = MysqlDriver::generateQuery($options);
+        $result = MysqlDriver::generateQuery($query->getOptions());
 
         $this->assertEquals('
         DELETE FROM mytable
-        WHERE 1 = 1
+        WHERE user_id > 3
         ORDER BY user_id DESC
         LIMIT 100', $result);
     }

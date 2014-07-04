@@ -351,9 +351,9 @@ class MysqlDriver extends DatabaseDriver
     private static function generateDeleteQuery($options)
     {
         return '
-        DELETE FROM '. $options['from']. '
-        WHERE '. (!empty($options['where_condition']) ? $options['where_condition'] : '1 = 1'). (!empty($options['order_by']) ? '
-        ORDER BY '. $options['order_by'] : ''). (!empty($options['limit']) ? '
+        DELETE FROM '. $options['table']. (!empty($options['condition']) ? '
+        WHERE '. $options['condition'] : ''). (!empty($options['orderBy']) ? '
+        ORDER BY '. $options['orderBy'] : ''). (!empty($options['limit']) ? '
         LIMIT '. $options['limit'] : '');
     }
 
