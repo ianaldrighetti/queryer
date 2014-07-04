@@ -177,6 +177,11 @@ class DatabaseTools
         // For this one, we need to get the Database.
         $db = self::getDatabaseInstance();
 
+        if (!Database::getAutoEscape())
+        {
+            return '\''. $db->sanitize($value). '\'';
+        }
+
         return '\''. $db->sanitize(htmlspecialchars($value, ENT_QUOTES, 'UTF-8')). '\'';
     }
 
