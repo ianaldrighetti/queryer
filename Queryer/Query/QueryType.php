@@ -33,7 +33,7 @@ class QueryType
     public function __construct($type)
     {
         $this->options = array();
-        $this->setOption('type', strtoupper($type));
+        $this->options['type'] = strtoupper($type);
     }
 
     /**

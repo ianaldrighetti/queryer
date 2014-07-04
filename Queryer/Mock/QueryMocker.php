@@ -1,5 +1,6 @@
 <?php
 namespace Queryer\Mock;
+
 use Queryer\Exception\QueryMockerResultException;
 
 /**
