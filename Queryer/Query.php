@@ -4,6 +4,10 @@ namespace Queryer;
 use InvalidArgumentException;
 use Queryer\Mock\QueryMockerInterface;
 use Queryer\Query\DeleteQuery;
+use Queryer\Query\InsertQuery;
+use Queryer\Query\ReplaceQuery;
+use Queryer\Query\SelectQuery;
+use Queryer\Query\UpdateQuery;
 
 /**
  * Class Query
@@ -353,6 +357,12 @@ class Query
      *
      * @param string $type The type of query to create.
      * @return Query
+     * @deprecated Please use the newer methods for returning query builders made for specific query types.
+     * @see delete
+     * @see insert
+     * @see replace
+     * @see select
+     * @see update
      */
     public static function create($type)
     {
@@ -360,12 +370,52 @@ class Query
     }
 
     /**
-     * Creates a new instance of a DELETE Query builder.
+     * Creates a new instance of a DELETE query builder.
      *
      * @return DeleteQuery
      */
     public static function delete()
     {
         return new DeleteQuery();
+    }
+
+    /**
+     * Creates a new instance of an INSERT query builder.
+     *
+     * @return InsertQuery
+     */
+    public static function insert()
+    {
+        return new InsertQuery(false);
+    }
+
+    /**
+     * Creates a new instance of a REPLACE query builder.
+     *
+     * @return ReplaceQuery
+     */
+    public static function replace()
+    {
+        return new ReplaceQuery();
+    }
+
+    /**
+     * Creates a new instance of a SELECT query builder.
+     *
+     * @return SelectQuery
+     */
+    public static function select()
+    {
+        return new SelectQuery();
+    }
+
+    /**
+     * Creates a new instance of an UPDATE query builder.
+     *
+     * @return UpdateQuery
+     */
+    public static function update()
+    {
+        return new UpdateQuery();
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace QueryerTests\Query;
 use Queryer\Query\UpdateQuery;
+use Queryer\Query;
 
 /**
  * Class UpdateQueryTest
@@ -18,7 +19,7 @@ class UpdateQueryTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->updateQuery = new UpdateQuery();
+        $this->updateQuery = Query::update();
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace QueryerTests\Query;
 use Queryer\Query\ReplaceQuery;
+use Queryer\Query;
 
 /**
  * Class ReplaceQueryTest
@@ -18,7 +19,7 @@ class ReplaceQueryTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->replaceQuery = new ReplaceQuery();
+        $this->replaceQuery = Query::replace();
     }
 
     /**

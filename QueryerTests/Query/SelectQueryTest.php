@@ -2,6 +2,7 @@
 namespace QueryerTests\Query;
 
 use Queryer\Query\SelectQuery;
+use Queryer\Query;
 
 /**
  * Class SelectQueryTest
@@ -19,7 +20,7 @@ class SelectQueryTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->selectQuery = new SelectQuery();
+        $this->selectQuery = Query::select();
     }
 
     /**

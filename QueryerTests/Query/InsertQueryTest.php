@@ -2,6 +2,7 @@
 namespace QueryerTests\Query;
 
 use Queryer\Query\InsertQuery;
+use Queryer\Query;
 
 /**
  * Class InsertQueryTest
@@ -19,7 +20,7 @@ class InsertQueryTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->insertQuery = new InsertQuery();
+        $this->insertQuery = Query::insert();
     }
 
     /**
