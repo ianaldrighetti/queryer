@@ -24,7 +24,7 @@ class UpdateQuery extends QueryType
     public function table($table)
     {
         $this->setOption('table', $table);
-        
+
         return $this;
     }
 
