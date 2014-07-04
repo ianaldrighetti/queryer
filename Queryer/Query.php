@@ -3,6 +3,7 @@ namespace Queryer;
 
 use InvalidArgumentException;
 use Queryer\Mock\QueryMockerInterface;
+use Queryer\Query\DeleteQuery;
 
 /**
  * Class Query
@@ -356,5 +357,15 @@ class Query
     public static function create($type)
     {
         return new Query($type);
+    }
+
+    /**
+     * Creates a new instance of a DELETE Query builder.
+     *
+     * @return DeleteQuery
+     */
+    public static function delete()
+    {
+        return new DeleteQuery();
     }
 }

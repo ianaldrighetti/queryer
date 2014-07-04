@@ -1,6 +1,9 @@
 <?php
 namespace Queryer\Query;
 
+use Queryer\Database;
+use Queryer\Mock\QueryMockerInterface;
+
 /**
  * Class QueryType
  *
@@ -58,6 +61,16 @@ class QueryType
     protected function getOption($option)
     {
         return array_key_exists($option, $this->options) ? $this->options[$option] : null;
+    }
+
+    /**
+     * Returns an array containing all the options for the built query.
+     *
+     * @return array
+     */
+    public final function getOptions()
+    {
+        return $this->options;
     }
 
     /**
