@@ -214,25 +214,20 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateQuery()
     {
-        $options = array(
-            'type' => 'UPDATE',
-            'ignore' => true,
-            'table' => 'tabletoupdate',
-            'values' => array(
+        $query = Query::update()
+            ->table('tabletoupdate')
+            ->set(array(
                 'myName' => '\'newName\''
-            ),
-            'where_condition' => 'myUserId = 100',
-            'order_by' => 'myName ASC',
-            'limit' => 2,
-        );
+            ))
+            ->where('myUserId = 100')
+            ->limit(2);
 
-        $result = MysqlDriver::generateQuery($options);
+        $result = MysqlDriver::generateQuery($query->getOptions());
 
         $this->assertEquals('
-        UPDATE IGNORE tabletoupdate
+        UPDATE tabletoupdate
         SET myName = \'newName\'
         WHERE myUserId = 100
-        ORDER BY myName ASC
         LIMIT 2', $result);
     }
 

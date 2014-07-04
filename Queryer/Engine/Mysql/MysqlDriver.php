@@ -217,10 +217,9 @@ class MysqlDriver extends DatabaseDriver
     private static function generateUpdateQuery($options)
     {
         return '
-        UPDATE '. (!empty($options['ignore']) ? 'IGNORE ' : ''). $options['table']. '
-        SET '. self::getUpdateSetValues($options['values']). '
-        WHERE '. (!empty($options['where_condition']) ? $options['where_condition'] : '1 = 1'). (!empty($options['order_by']) ? '
-        ORDER BY '. $options['order_by'] : ''). (!empty($options['limit']) ? '
+        UPDATE '. $options['table']. '
+        SET '. self::getUpdateSetValues($options['set']). (!empty($options['condition']) ? '
+        WHERE '. $options['condition'] : ''). (!empty($options['limit']) ? '
         LIMIT '. $options['limit'] : '');
     }
 

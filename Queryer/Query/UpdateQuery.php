@@ -50,7 +50,7 @@ class UpdateQuery extends QueryType
      */
     public function where($where)
     {
-        $this->setOption('where', $where);
+        $this->setOption('condition', $where);
 
         return $this;
     }
