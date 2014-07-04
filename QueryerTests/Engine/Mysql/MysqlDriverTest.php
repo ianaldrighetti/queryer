@@ -174,28 +174,18 @@ class MysqlDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testSelectQuery()
     {
-        $options = array(
-            'type' => 'SELECT',
-            'expr' => 'mycolumn, anothercolumn',
-            'table' => 'mytable',
-            'alias' => 'myt',
-            'joins' => array(
-                array(
-                    'type' => 'INNER',
-                    'table' => 'users',
-                    'alias' => 'u',
-                    'condition' => 'u.user_id = myt.user_id',
-                )
-            ),
-            'condition' => 'u.user_id = 1',
-            'groupBy' => 'myt.user_group',
-            'having' => 'myt.user_id > 1',
-            'orderBy' => 'myt.user_id DESC',
-            'limit' => 20,
-            'offset' => 60,
-        );
+        $query = Query::select()
+            ->expr('mycolumn, anothercolumn')
+            ->from('mytable', 'myt')
+            ->join('INNER', 'users', 'u', 'u.user_id = myt.user_id')
+            ->where('u.user_id = 1')
+            ->groupBy('myt.user_group')
+            ->having('myt.user_id > 1')
+            ->orderBy('myt.user_id DESC')
+            ->limit(20)
+            ->offset(60);
 
-        $result = MysqlDriver::generateQuery($options);
+        $result = MysqlDriver::generateQuery($query->getOptions());
 
         $this->assertEquals('
         SELECT
