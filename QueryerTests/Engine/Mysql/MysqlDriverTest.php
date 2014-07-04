@@ -1,9 +1,6 @@
 <?php
 namespace QueryerTests\Engine\Mysql;
 
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
-
 use Queryer\Driver\DatabaseTools;
 use Queryer\Engine\Mysql\MysqlDriver;
 use Queryer\Query;
