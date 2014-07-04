@@ -32,18 +32,18 @@ class UpdateQueryTest extends \PHPUnit_Framework_TestCase
             'col1' => 'col1 + col1',
             'value1' => '{int:val}',
         );
-        $where = 'col1 > 100';
+        $condition = 'col1 > 100';
         $limit = 321;
 
         $this->updateQuery
             ->table($table)
             ->set($set)
-            ->where($where)
+            ->where($condition)
             ->limit($limit);
 
         $options = $this->updateQuery->getOptions();
         $keyMap = array(
-            'table', 'set', 'where', 'limit'
+            'table', 'set', 'condition', 'limit'
         );
         foreach ($keyMap as $key)
         {
