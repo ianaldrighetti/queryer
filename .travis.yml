@@ -3,14 +3,21 @@ language: php
 php:
   - 5.3
 
+addons:
+  code_climate:
+    repo_token: 5994813975d995f90ca993f02562957ec445c66995d5358ea10544e5634c8d5f
+
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
   - mysql -e "CREATE DATABASE IF NOT EXISTS queryer_tests;" -uroot;
 
 script:
-  - phpunit --configuration phpunit.xml
-  - phpunit --configuration phpunit.mysql.xml
+  - phpunit --configuration phpunit.xml --coverage-clover build/logs/clover.xml
+  - phpunit --configuration phpunit.mysql.xml --coverage-clover build/logs/clover.mysql.xml
+
+after_script:
+  - vendor/bin/test-reporter
 
 notifications:
     on_success: change
