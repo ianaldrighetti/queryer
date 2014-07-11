@@ -17,7 +17,6 @@ script:
   - phpunit --configuration phpunit.mysql.xml --coverage-clover build/logs/clover.mysql.xml
 
 after_script:
-after_script:
   - CODECLIMATE_REPO_TOKEN="5994813975d995f90ca993f02562957ec445c66995d5358ea10544e5634c8d5f" vendor/bin/test-reporter --stdout > codeclimate.json
   - curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v1.0.1-dev)' https://codeclimate.com/test_reports
 
