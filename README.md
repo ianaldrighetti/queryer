@@ -1,6 +1,7 @@
 # Queryer
 
 [![Build Status](https://travis-ci.org/ianaldrighetti/queryer.svg?branch=master)](https://travis-ci.org/ianaldrighetti/queryer)
+[![Code Climate](https://codeclimate.com/github/ianaldrighetti/queryer.png)](https://codeclimate.com/github/ianaldrighetti/queryer)
 
 Queryer is a simple PHP database abstraction layer. It isn't meant to be anything fancy or all encompassing, but I
 intend to use it in many of my projects.
