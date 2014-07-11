@@ -3,10 +3,6 @@ language: php
 php:
   - 5.3
 
-addons:
-  code_climate:
-    repo_token: 5994813975d995f90ca993f02562957ec445c66995d5358ea10544e5634c8d5f
-
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
