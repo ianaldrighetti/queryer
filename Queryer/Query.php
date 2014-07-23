@@ -5,6 +5,7 @@ use InvalidArgumentException;
 use Queryer\Mock\QueryMockerInterface;
 use Queryer\Query\DeleteQuery;
 use Queryer\Query\InsertQuery;
+use Queryer\Query\NativeQuery;
 use Queryer\Query\QueryType;
 use Queryer\Query\ReplaceQuery;
 use Queryer\Query\SelectQuery;
@@ -418,5 +419,15 @@ class Query
     public static function update()
     {
         return new UpdateQuery();
+    }
+
+    /**
+     * Creates a new instance of a native query builder.
+     * 
+     * @return NativeQuery
+     */
+    public static function native()
+    {
+        return new NativeQuery();
     }
 }

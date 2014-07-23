@@ -3,6 +3,10 @@ namespace Queryer\Engine\Sqlite3;
 
 use Queryer\Driver\DatabaseDriverResult;
 
+/**
+ * Class Sqlite3DriverResult
+ * @package Queryer\Engine\Sqlite3
+ */
 class Sqlite3DriverResult extends DatabaseDriverResult
 {
     /**
