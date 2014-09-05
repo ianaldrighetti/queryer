@@ -423,7 +423,7 @@ class Query
 
     /**
      * Creates a new instance of a native query builder.
-     * 
+     *
      * @return NativeQuery
      */
     public static function native()
